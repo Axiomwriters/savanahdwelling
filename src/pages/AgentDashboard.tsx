@@ -5,6 +5,7 @@ import { AgentSidebar } from "@/components/AgentSidebar";
 import { HeaderWrapper } from "@/components/HeaderWrapper";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const DashboardOverview = lazy(() => import("./AgentDashboard/DashboardOverview"));
 const AgentProfile = lazy(() => import("./AgentDashboard/AgentProfile"));
@@ -45,12 +46,26 @@ export default function AgentDashboard() {
               <Routes>
                 <Route index element={<DashboardOverview />} />
                 <Route path="profile" element={<AgentProfile />} />
-                <Route path="listings" element={<MyListings />} />
+                <Route 
+                path="listings" 
+                element={
+                <ProtectedRoute requiredRole="agent">
+                  <MyListings />
+                </ProtectedRoute>
+              } 
+                />
                 <Route path="listings/new" element={<CreateListing />} />
                 <Route path="listings/edit/:id" element={<CreateListing />} />
                 <Route path="notifications" element={<Notifications />} />
                 <Route path="trips" element={<AgentTripsPanel />} />
-                <Route path="settings" element={<AgentSettings />} />
+                <Route
+                 path="settings"
+                element={
+                  <ProtectedRoute requiredRole="agent">
+                    <AgentSettings />
+                  </ProtectedRoute>
+                } 
+                />
               </Routes>
             </Suspense>
           </main>

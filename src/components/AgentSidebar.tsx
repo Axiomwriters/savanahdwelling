@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { SponsoredSpotlight } from "./agent-sidebar-widgets/SponsoredSpotlight";
 import { AccountTierWidget } from "./agent-sidebar-widgets/AccountTierWidget";
+import { UserButton, useUser } from '@clerk/clerk-react'
 
 const mainItems = [
   { title: "Dashboard", url: "/agent", icon: LayoutDashboard },
@@ -46,15 +47,18 @@ const mainItems = [
 
 export function AgentSidebar() {
   const { state } = useSidebar();
-  const { user, signOut } = useAuth();
+  // const { user, signOut } = useAuth();
   const location = useLocation();
   const isCollapsed = state === "collapsed";
   const [pendingCount, setPendingCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const { user, isLoaded } = useUser();
 
-  useEffect(() => {
-    if (user) fetchCounts();
-  }, [user]);
+  if (!isLoaded) return null;
+
+  // useEffect(() => {
+  //   if (user) fetchCounts();
+  // }, [user]);
 
   const fetchCounts = async () => {
     try {
@@ -77,10 +81,10 @@ export function AgentSidebar() {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    toast.success("Logged out successfully");
-  };
+  // const handleLogout = async () => {
+  //   await signOut();
+  //   toast.success("Logged out successfully");
+  // };
 
   return (
     <Sidebar className={isCollapsed ? "w-14" : "w-60"}>
@@ -161,7 +165,7 @@ export function AgentSidebar() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              {/* <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.user_metadata?.full_name} />
                 <AvatarFallback className="rounded-lg">
                   {(user?.user_metadata?.full_name || user?.email || "AG").slice(0, 2).toUpperCase()}
@@ -181,6 +185,11 @@ export function AgentSidebar() {
                 title="Logout"
               >
                 <LogOut className="size-4" />
+              </div> */}
+              <UserButton />
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user?.fullName || user?.firstName|| 'Agent'}</span>
+                <span className="truncate text-xs">{user?.primaryEmailAddress?.emailAddress}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

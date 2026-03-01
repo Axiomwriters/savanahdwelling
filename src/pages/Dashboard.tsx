@@ -22,6 +22,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { UserButton } from "@clerk/clerk-react";
 
 // ... (other imports)
 

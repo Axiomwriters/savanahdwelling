@@ -1,27 +1,29 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
 import { Home, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { SignInButton, SignUpButton } from "@clerk/clerk-react";
 
 export default function Auth() {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+  // const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginType, setLoginType] = useState<"user" | "agent" | "professional">("user");
+  const navigate = useNavigate()
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [loginType, setLoginType] = useState<"user" | "agent" | "professional">("user");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const { signIn, signUp, isAuthenticated, mockSignIn } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  // });
+  // const { signIn, signUp, isAuthenticated, mockSignIn } = useAuth();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
   // Get the page they were trying to visit, or default to home
   // @ts-ignore - 'from' might not exist on state type
@@ -29,86 +31,86 @@ export default function Auth() {
 
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
 
-    try {
-      if (activeTab === "login") {
-        const { error } = await signIn(formData.email, formData.password);
+  //   try {
+  //     if (activeTab === "login") {
+  //       const { error } = await signIn(formData.email, formData.password);
 
-        if (error) {
-          toast.error(error.message || "Failed to sign in");
-          setIsLoading(false);
-          return;
-        }
+  //       if (error) {
+  //         toast.error(error.message || "Failed to sign in");
+  //         setIsLoading(false);
+  //         return;
+  //       }
 
-        setShowSuccess(true);
-        setTimeout(() => {
-          toast.success("Successfully logged in!");
-          // Redirect based on login type (simulated for now as role is handled by backend)
-          if (loginType === "agent") navigate("/agent");
-          else if (loginType === "professional") navigate("/professional");
-          else navigate("/", { replace: true });
-        }, 1500);
-      } else {
-        if (!formData.name) {
-          toast.error("Please enter your full name");
-          setIsLoading(false);
-          return;
-        }
+  //       setShowSuccess(true);
+  //       setTimeout(() => {
+  //         toast.success("Successfully logged in!");
+  //         // Redirect based on login type (simulated for now as role is handled by backend)
+  //         if (loginType === "agent") navigate("/agent");
+  //         else if (loginType === "professional") navigate("/professional");
+  //         else navigate("/", { replace: true });
+  //       }, 1500);
+  //     } else {
+  //       if (!formData.name) {
+  //         toast.error("Please enter your full name");
+  //         setIsLoading(false);
+  //         return;
+  //       }
 
-        const { error } = await signUp(formData.email, formData.password, formData.name);
+  //       const { error } = await signUp(formData.email, formData.password, formData.name);
 
-        if (error) {
-          toast.error(error.message || "Failed to sign up");
-          setIsLoading(false);
-          return;
-        }
+  //       if (error) {
+  //         toast.error(error.message || "Failed to sign up");
+  //         setIsLoading(false);
+  //         return;
+  //       }
 
-        setShowSuccess(true);
-        setTimeout(() => {
-          toast.success(`Account created! Welcome, ${loginType === 'professional' ? 'Professional' : loginType === 'agent' ? 'Agent' : 'User'}!`);
+  //       setShowSuccess(true);
+  //       setTimeout(() => {
+  //         toast.success(`Account created! Welcome, ${loginType === 'professional' ? 'Professional' : loginType === 'agent' ? 'Agent' : 'User'}!`);
 
-          if (loginType === "agent") navigate("/become-agent");
-          else if (loginType === "professional") navigate("/professional");
-          else navigate("/", { replace: true });
-        }, 1500);
-      }
-    } catch (error) {
-      toast.error("An error occurred");
-      setIsLoading(false);
-    }
-  };
+  //         if (loginType === "agent") navigate("/become-agent");
+  //         else if (loginType === "professional") navigate("/professional");
+  //         else navigate("/", { replace: true });
+  //       }, 1500);
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred");
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const handleSocialLogin = async (provider: string) => {
-    if (provider === "Google") {
-      setIsLoading(true);
+  // const handleSocialLogin = async (provider: string) => {
+  //   if (provider === "Google") {
+  //     setIsLoading(true);
 
-      // Simulate network delay for realism
-      setTimeout(async () => {
-        const { error } = await mockSignIn(loginType);
-        setIsLoading(false);
+  //     // Simulate network delay for realism
+  //     setTimeout(async () => {
+  //       const { error } = await mockSignIn(loginType);
+  //       setIsLoading(false);
         
-        if (error) {
-          toast.error(error.message || "Failed to sign in");
-          return;
-        }
+  //       if (error) {
+  //         toast.error(error.message || "Failed to sign in");
+  //         return;
+  //       }
 
-        setShowSuccess(true);
+  //       setShowSuccess(true);
 
-        setTimeout(() => {
-          toast.success(`Successfully logged in as ${loginType}!`);
-          if (loginType === "agent") navigate("/agent");
-          else if (loginType === "professional") navigate("/professional");
-          else navigate("/", { replace: true });
-        }, 1500);
-      }, 1000);
+  //       setTimeout(() => {
+  //         toast.success(`Successfully logged in as ${loginType}!`);
+  //         if (loginType === "agent") navigate("/agent");
+  //         else if (loginType === "professional") navigate("/professional");
+  //         else navigate("/", { replace: true });
+  //       }, 1500);
+  //     }, 1000);
 
-      return;
-    }
-    toast.info(`${provider} login coming soon!`);
-  };
+  //     return;
+  //   }
+  //   toast.info(`${provider} login coming soon!`);
+  // };
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -123,7 +125,7 @@ export default function Auth() {
             <span className="text-xl font-bold text-foreground">PropertyHub</span>
           </Link>
 
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               {activeTab === "login" ? "Log in to your account" : "Create an account"}
             </h1>
@@ -132,10 +134,10 @@ export default function Auth() {
                 ? "Welcome back! Please enter your details."
                 : "Start your journey with us today."}
             </p>
-          </div>
+          </div> */}
 
           {/* Login Type Selector (Only for Login) */}
-          {activeTab === "login" && (
+          {/* {activeTab === "login" && (
             <div className="flex gap-2 mb-6 p-1 bg-muted rounded-lg">
               <button
                 onClick={() => setLoginType("user")}
@@ -165,9 +167,25 @@ export default function Auth() {
                 Professional
               </button>
             </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
+          )} */}
+          <Button
+              type="button"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-11 text-base transition-all duration-300"
+              disabled={isLoading}
+              onClick={() => navigate('/sign-in')}
+            >
+              <SignInButton />
+            </Button>
+            <Button
+              type="button"
+              className="w-full bg-primary mt-3 hover:bg-primary/90 text-primary-foreground h-11 text-base transition-all duration-300"
+              disabled={isLoading}
+              onClick={() => navigate('/sign-up')}
+            >
+              <SignUpButton />
+            </Button>
+          
+          {/* <form onSubmit={handleSubmit} className="space-y-5">
             {activeTab === "signup" && (
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
@@ -296,7 +314,7 @@ export default function Auth() {
             >
               {activeTab === "login" ? "Sign up" : "Log in"}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 
