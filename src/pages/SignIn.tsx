@@ -1,4 +1,5 @@
-import { SignIn } from '@clerk/react-router'
+// src/pages/SignIn.tsx
+import { SignIn } from '@clerk/clerk-react'  // ← was @clerk/react-router
 
 export default function SignInPage() {
   return (
