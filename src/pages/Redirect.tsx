@@ -3,6 +3,8 @@ import { useUser }       from "@clerk/clerk-react";
 import { useNavigate }   from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { supabase }      from "@/integrations/supabase/client";
+import SSOCallback from "./pages/SSOCallback";
+
 
 export default function Redirect() {
   const { user, isLoaded, isSignedIn } = useUser();
