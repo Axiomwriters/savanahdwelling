@@ -13,7 +13,7 @@ const MyListings = lazy(() => import("./AgentDashboard/MyListings"));
 const CreateListing = lazy(() => import("./AgentDashboard/CreateListing"));
 const Notifications = lazy(() => import("./AgentDashboard/Notifications"));
 const AgentSettings = lazy(() => import("./AgentDashboard/AgentSettings"));
-const AgentTripsPanel = lazy(() => import("./AgentDashboard/components/AgentTripsPanel").then(m => ({ default: m.AgentTripsPanel })));
+const AgentTripsPanel = lazy(() => import("./AgentDashboard/components/AgentTripsPanel"));
 
 export default function AgentDashboard() {
   const [isScrolled, setIsScrolled] = useState(false);
