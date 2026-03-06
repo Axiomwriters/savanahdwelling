@@ -38,7 +38,7 @@ Deno.serve(async (req: Request) => {
             Open Agent Dashboard →
           </a>
           <p style="color:#9ca3af;font-size:12px;margin-top:32px">
-            Savanah Dwelling · Kenya Prime Dwellings · PataHome
+            Savanah Dwelling · 
           </p>
         </div>
       `,
