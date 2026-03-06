@@ -89,6 +89,9 @@ const App = () => {
                     <Route path="/sign-in/*" element={<SignInPage />} />
                     <Route path="/sign-up/*" element={<SignUpPage />} />
                     <Route path="/redirect" element={<Redirect />} />
+                    {/* OAuth SSO callback — must be public, no ProtectedRoute */}
+                    <Route path="/sso-callback" element={<SSOCallback />} />
+
 
                     {/* ─── Account Routes ─────────────────────────────── */}
                     <Route path="/profile/settings" element={<UserProfileSettings />} />
