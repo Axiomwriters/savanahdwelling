@@ -45,6 +45,8 @@ import TripDetails from "./pages/ShortStay/TripDetails";
 import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import Redirect from "./pages/Redirect";
+import SSOCallback from "./pages/SSOCallback";
+
 
 const queryClient = new QueryClient();
 
