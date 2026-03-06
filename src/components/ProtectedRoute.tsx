@@ -36,8 +36,7 @@ export function ProtectedRoute({
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  const userRole = user?.unsafeMetadata?.role as AppRole | undefined;
-
+const userRole = user?.publicMetadata?.role as AppRole | undefined;
   // Role guard — admin always passes through
   if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
     return <Navigate to="/unauthorized" replace />;
