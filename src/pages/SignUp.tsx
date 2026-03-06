@@ -12,10 +12,10 @@ import { cn } from '@/lib/utils'
 type Step = 'role' | 'credentials' | 'verify'
 
 const ROLES = [
-  { value: 'buyer',        label: '🏠 Buyer / Renter',     desc: 'Browse & save properties' },
-  { value: 'agent',        label: '💼 Real Estate Agent',  desc: 'List & manage properties' },
-  { value: 'host',         label: '🏨 Short-Stay Host',    desc: 'List vacation & short-stay rentals' },
-  { value: 'professional', label: '🔧 Professional',        desc: 'Offer property-related services' },
+  { value: 'buyer',        label: ' Buyer / Renter',     desc: 'Browse & save properties' },
+  { value: 'agent',        label: ' Real Estate Agent',  desc: 'List & manage properties' },
+  { value: 'host',         label: ' AirBnb Host',    desc: 'List vacation & short-stay rentals' },
+  { value: 'professional', label: ' Professional',        desc: 'Offer property-related services' },
 ]
 
 export default function SignUpPage() {
