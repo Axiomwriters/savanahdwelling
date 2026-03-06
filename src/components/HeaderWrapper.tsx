@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { TopHeaderBar } from "@/components/TopHeaderBar";
-import { DashboardHeader } from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/DashboardHeader";
 import { cn } from "@/lib/utils";
 
 interface HeaderWrapperProps {
