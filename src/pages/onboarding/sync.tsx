@@ -1,4 +1,3 @@
-cat > src/pages/onboarding/sync.tsx <<'EOF'
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
@@ -108,4 +107,3 @@ const SyncPage = () => {
 };
 
 export default SyncPage;
-EOF
