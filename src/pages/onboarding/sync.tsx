@@ -31,6 +31,7 @@ const SyncPage = () => {
   const { user, isLoaded } = useUser();
   const navigate = useNavigate();
   const [status, setStatus] = useState<SyncStatus>('checking');
+  const [isAssigningRole, setIsAssigningRole] = useState(false);
 
   const role = user?.unsafeMetadata?.role as AppRole;
   const roleRedirectPath = useMemo(() => getRoleRedirectPath(role), [role]);
@@ -65,13 +66,67 @@ const SyncPage = () => {
     setStatus('timeout');
   }, [navigate, roleRedirectPath, user]);
 
+  const handleRoleSelection = useCallback(async (nextRole: 'agent' | 'host') => {
+    if (!user) {
+      return;
+    }
+
+    setIsAssigningRole(true);
+    await user.update({
+      unsafeMetadata: {
+        ...user.unsafeMetadata,
+        role: nextRole,
+        onboardingComplete: false,
+      },
+    });
+
+    const { error } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          clerk_user_id: user.id,
+          role: nextRole,
+          onboarding_complete: false,
+        },
+        { onConflict: 'clerk_user_id' },
+      );
+
+    if (error) {
+      console.error('Profile role sync failed:', error.message);
+    }
+
+    setIsAssigningRole(false);
+    navigate(getRoleRedirectPath(nextRole), { replace: true });
+  }, [navigate, user]);
+
   useEffect(() => {
-    if (!isLoaded || !user) {
+    if (!isLoaded || !user || !role) {
       return;
     }
 
     void checkSupabaseRecord();
-  }, [checkSupabaseRecord, isLoaded, user]);
+  }, [checkSupabaseRecord, isLoaded, role, user]);
+
+  if (isLoaded && user && !role) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <div className="max-w-xl w-full border rounded-xl p-6 bg-card text-center space-y-4">
+          <p className="text-xl font-semibold">Choose Your Professional Role</p>
+          <p className="text-sm text-muted-foreground">
+            Select how you want to use Savanah Dwelling so we can route you to the correct command center.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Button disabled={isAssigningRole} onClick={() => void handleRoleSelection('agent')}>
+              {isAssigningRole ? 'Assigning...' : 'I am an Agent'}
+            </Button>
+            <Button disabled={isAssigningRole} variant="outline" onClick={() => void handleRoleSelection('host')}>
+              {isAssigningRole ? 'Assigning...' : 'I am a Host'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'timeout') {
     return (
