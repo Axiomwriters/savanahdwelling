@@ -1,0 +1,80 @@
+import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Building2, Briefcase, TrendingUp, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@clerk/clerk-react';
+
+const ProfessionalLanding = () => {
+  const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const qualifiedBuyers = useMemo(() => ({
+    total: 124,
+    areas: ['Milimani', 'Kiamunyi', 'Section 58', 'Njoro'],
+  }), []);
+
+  const handleSignup = (role: 'agent' | 'host') => {
+    if (isSignedIn) {
+      navigate('/onboarding/sync', { replace: true });
+      return;
+    }
+
+    navigate(`/sign-up?role=${role}`, { replace: false });
+  };
+
+  return (
+    <main className="min-h-screen bg-background">
+      <section className="mx-auto max-w-7xl px-4 py-14 md:py-20">
+        <div className="rounded-2xl border bg-card p-6 md:p-10">
+          <p className="text-xs md:text-sm font-semibold uppercase tracking-wide text-primary">
+            Savanah Professional Hub · Nakuru, Kenya
+          </p>
+          <h1 className="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+            The All-in-One Suite for Kenyan Real Estate Professionals.
+          </h1>
+          <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl">
+            Use the Savanah Intelligence Engine to value your listings with 95% accuracy,
+            track demand signals, and convert more qualified buyers across Nakuru.
+          </p>
+
+          <div className="mt-7 flex flex-col sm:flex-row gap-3">
+            <Button size="lg" className="w-full sm:w-auto" onClick={() => handleSignup('agent')}>
+              Sign Up as Agent
+            </Button>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto" onClick={() => handleSignup('host')}>
+              Sign Up as Host (Short Stay)
+            </Button>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-xl border p-4 bg-background/70">
+              <div className="flex items-center gap-2 text-primary"><TrendingUp className="w-4 h-4" /> Views</div>
+              <p className="mt-2 text-sm text-muted-foreground">Live listing demand visibility by neighborhood.</p>
+            </div>
+            <div className="rounded-xl border p-4 bg-background/70">
+              <div className="flex items-center gap-2 text-primary"><Users className="w-4 h-4" /> Enquiry Trends</div>
+              <p className="mt-2 text-sm text-muted-foreground">Track inbound enquiries and closing velocity.</p>
+            </div>
+            <div className="rounded-xl border p-4 bg-background/70">
+              <div className="flex items-center gap-2 text-primary"><Briefcase className="w-4 h-4" /> Intent Scores</div>
+              <p className="mt-2 text-sm text-muted-foreground">Prioritize serious buyers with intent scoring.</p>
+            </div>
+            <div className="rounded-xl border p-4 bg-background/70">
+              <div className="flex items-center gap-2 text-primary"><Building2 className="w-4 h-4" /> BuyAbility</div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {qualifiedBuyers.total} qualified buyers are active in {qualifiedBuyers.areas.join(', ')}.
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-8 text-sm text-muted-foreground">
+            Looking to buy or rent?{' '}
+            <Link to="/" className="underline underline-offset-4">Go to the buyer experience</Link>.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default ProfessionalLanding;

@@ -44,6 +44,7 @@ import BookingCheckout from "./pages/ShortStay/BookingCheckout";
 import BookingConfirmation from "./pages/ShortStay/BookingConfirmation";
 import GuestDashboard from "./pages/ShortStay/GuestDashboard";
 import TripDetails from "./pages/ShortStay/TripDetails";
+import ProfessionalLanding from "./pages/ProfessionalLanding";
 import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import SSOCallback from "./pages/SSOCallback";
@@ -88,6 +89,7 @@ const App = () => {
                           <Route path="/explore/:category" element={<ExplorePage />} />
                           <Route path="/affordability" element={<AffordabilityPage />} />
                           <Route path="/shop/building-materials" element={<BuildingMaterialsShop />} />
+                          <Route path="/professional" element={<ProfessionalLanding />} />
                         </Route>
 
                         {/* ─── Auth Routes ────────────────────────────────── */}

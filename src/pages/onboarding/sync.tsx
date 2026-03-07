@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
@@ -31,7 +32,10 @@ const SyncPage = () => {
   const { user, isLoaded } = useUser();
   const navigate = useNavigate();
   const [status, setStatus] = useState<SyncStatus>('checking');
+  const [isAssigningRole, setIsAssigningRole] = useState(false);
 
+  useEffect(() => {
+    if (!isLoaded || !user) {
   const role = user?.unsafeMetadata?.role as AppRole;
   const roleRedirectPath = useMemo(() => getRoleRedirectPath(role), [role]);
 
@@ -40,6 +44,40 @@ const SyncPage = () => {
       return;
     }
 
+    const checkSupabaseRecord = async () => {
+      let retries = 5;
+      while (retries > 0) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('clerk_user_id')
+          .eq('clerk_user_id', user.id)
+          .single();
+
+        if (data) {
+          // Record found, proceed with role-based redirect
+          const role = user.unsafeMetadata.role as string;
+          switch (role) {
+            case 'agent':
+              navigate('/dashboard/agent', { replace: true });
+              break;
+            case 'host':
+              navigate('/dashboard/short-stay', { replace: true });
+              break;
+            case 'tenant':
+              navigate('/dashboard/tenant', { replace: true });
+              break;
+            case 'admin':
+              navigate('/admin', { replace: true });
+              break;
+            default:
+              navigate('/', { replace: true });
+          }
+          return;
+        }
+
+        // Record not found, wait and retry
+        retries--;
+        await new Promise(resolve => setTimeout(resolve, 1000));
     setStatus('checking');
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt += 1) {
@@ -58,6 +96,9 @@ const SyncPage = () => {
         console.error('Profile sync check failed:', error.message);
       }
 
+      // If after 5 seconds the record is still not there, redirect to an error page or show a message
+      navigate('/error', { state: { message: 'Failed to sync your account. Please contact support.' } });
+    };
       const backoffMs = Math.min(BASE_BACKOFF_MS * (2 ** attempt), MAX_BACKOFF_MS);
       await new Promise(resolve => setTimeout(resolve, backoffMs));
     }
@@ -65,13 +106,69 @@ const SyncPage = () => {
     setStatus('timeout');
   }, [navigate, roleRedirectPath, user]);
 
+  const handleRoleSelection = useCallback(async (nextRole: 'agent' | 'host') => {
+    if (!user) {
+      return;
+    }
+
+    setIsAssigningRole(true);
+    await user.update({
+      unsafeMetadata: {
+        ...user.unsafeMetadata,
+        role: nextRole,
+        onboardingComplete: false,
+      },
+    });
+
+    const { error } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          clerk_user_id: user.id,
+          role: nextRole,
+          onboarding_complete: false,
+        },
+        { onConflict: 'clerk_user_id' },
+      );
+
+    if (error) {
+      console.error('Profile role sync failed:', error.message);
+    }
+
+    setIsAssigningRole(false);
+    navigate(getRoleRedirectPath(nextRole), { replace: true });
+  }, [navigate, user]);
+
   useEffect(() => {
-    if (!isLoaded || !user) {
+    if (!isLoaded || !user || !role) {
       return;
     }
 
     void checkSupabaseRecord();
-  }, [checkSupabaseRecord, isLoaded, user]);
+  }, [checkSupabaseRecord, isLoaded, role, user]);
+
+    checkSupabaseRecord();
+  }, [isLoaded, user, navigate]);
+  if (isLoaded && user && !role) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <div className="max-w-xl w-full border rounded-xl p-6 bg-card text-center space-y-4">
+          <p className="text-xl font-semibold">Choose Your Professional Role</p>
+          <p className="text-sm text-muted-foreground">
+            Select how you want to use Savanah Dwelling so we can route you to the correct command center.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Button disabled={isAssigningRole} onClick={() => void handleRoleSelection('agent')}>
+              {isAssigningRole ? 'Assigning...' : 'I am an Agent'}
+            </Button>
+            <Button disabled={isAssigningRole} variant="outline" onClick={() => void handleRoleSelection('host')}>
+              {isAssigningRole ? 'Assigning...' : 'I am a Host'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'timeout') {
     return (
