@@ -11,6 +11,7 @@ interface HeaderWrapperProps {
 
 export function HeaderWrapper({
   isScrolled = false,
+  onOpenTrip,
 }: HeaderWrapperProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(
@@ -36,7 +37,7 @@ export function HeaderWrapper({
   return (
     <div
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-border/40 transition-all duration-150 ease-out",
+        "w-full border-b border-border/40 transition-all duration-150 ease-out",
         isScrolled
           ? "bg-background/80 backdrop-blur-md shadow-md"
           : "bg-background shadow-sm"
@@ -46,7 +47,7 @@ export function HeaderWrapper({
       <div
         className={cn(
           "w-full overflow-hidden transition-[height,opacity] duration-150 ease-out",
-          isScrolled ? "h-0 opacity-0" : "h-[40px] opacity-100"
+          isScrolled ? "h-0 opacity-0" : "h-auto opacity-100"
         )}
       >
         <div className="border-b border-border/10">
@@ -58,6 +59,7 @@ export function HeaderWrapper({
       <DashboardHeader
         searchTerm={searchTerm}
         onSearchChange={handleSearch}
+        onOpenTrip={onOpenTrip}
       />
     </div>
   );

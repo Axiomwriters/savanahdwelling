@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -8,6 +8,16 @@ import { LocationAgentWidget } from "@/components/LocationAgentWidget";
 
 export default function MainLayout() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0.5);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <SidebarProvider>
@@ -15,9 +25,9 @@ export default function MainLayout() {
         <AppSidebar onOpenProfile={() => setIsProfileOpen(true)} />
         <SidebarInset>
           <header className="sticky top-0 z-40 border-b">
-            <HeaderWrapper onOpenTrip={() => setIsProfileOpen(true)} />
+            <HeaderWrapper onOpenTrip={() => setIsProfileOpen(true)} isScrolled={isScrolled} />
           </header>
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 p-6 sm:p-10 lg:p-12">
             <Outlet />
           </main>
         </SidebarInset>
