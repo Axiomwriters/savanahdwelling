@@ -1,3 +1,4 @@
+
 // src/components/ProtectedRoute.tsx
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
@@ -36,16 +37,14 @@ export function ProtectedRoute({
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-const userRole = user?.publicMetadata?.role as AppRole | undefined;
-  // Also fix the role guard to handle undefined role gracefully
-if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
-  // Add: if userRole is undefined, redirect to a "complete your profile" page
-  if (!userRole) return <Navigate to="/sign-in" replace />;
-  return <Navigate to="/unauthorized" replace />;
-}
+  // Correctly get the role from unsafeMetadata
+  const userRole = user?.unsafeMetadata?.role as AppRole | undefined;
 
   // Role guard — admin always passes through
   if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
+    // If the role is missing, it's a sign-up incompletion.
+    // Redirect to a page that can handle that, e.g., /redirect
+    if (!userRole) return <Navigate to="/redirect" replace />;
     return <Navigate to="/unauthorized" replace />;
   }
 
