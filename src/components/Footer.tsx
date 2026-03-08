@@ -1,5 +1,5 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
-import logo from "/savanah-dwelling.png";
+import logo from "/Savanahdwell.png";
 
 export const Footer = () => {
   return (
