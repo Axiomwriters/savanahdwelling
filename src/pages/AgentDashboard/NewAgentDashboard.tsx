@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AgentSidebar } from '../../components/AgentSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -10,7 +9,7 @@ const NewAgentDashboard: React.FC = () => {
       <div className="flex h-screen bg-background">
         <AgentSidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <header className="flex justify-end items-center p-4">
+          <header className="flex justify-end items-center px-6 py-4 border-b">
             <ModeToggle />
           </header>
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6 flex items-center justify-center">
