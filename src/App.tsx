@@ -130,9 +130,21 @@ const App = () => {
                         } />
 
                         {/* ─── Protected: Tenant Dashboard ─────────────────── */}
+                        <Route path="/Dashboard" element={
+                          <ProtectedRoute>
+                            <Dashboard />
+                          </ProtectedRoute>
+                        } />
+
                         <Route path="/dashboard/tenant" element={
                           <ProtectedRoute requiredRole="tenant">
                             <Dashboard />
+                          </ProtectedRoute>
+                        } />
+
+                        <Route path="/ProfessionalDashboard/*" element={
+                          <ProtectedRoute requiredRole="professional-tier">
+                            <ProfessionalDashboard />
                           </ProtectedRoute>
                         } />
 

@@ -4,13 +4,13 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { AppRole, isProfessionalTier } from "@/utils/AuthRedirectHandler";
 
-// All valid role values that Clerk unsafeMetadata.role can hold
-type AppRole = 'buyer' | 'agent' | 'host' | 'professional' | 'admin';
+type RequiredRole = Exclude<AppRole, null | undefined> | 'professional-tier';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: AppRole;
+  requiredRole?: RequiredRole;
   redirectTo?: string;
 }
 
@@ -38,10 +38,20 @@ export function ProtectedRoute({
   }
 
   // Correctly get the role from unsafeMetadata
-  const userRole = user?.unsafeMetadata?.role as AppRole | undefined;
+  const userRole = user?.unsafeMetadata?.role as AppRole;
+
+  if (requiredRole === 'professional-tier' && !isProfessionalTier(userRole)) {
+    if (!userRole) return <Navigate to="/redirect" replace />;
+    return <Navigate to="/unauthorized" replace />;
+  }
 
   // Role guard — admin always passes through
-  if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
+  if (
+    requiredRole
+    && requiredRole !== 'professional-tier'
+    && userRole !== requiredRole
+    && userRole !== 'admin'
+  ) {
     // If the role is missing, it's a sign-up incompletion.
     // Redirect to a page that can handle that, e.g., /redirect
     if (!userRole) return <Navigate to="/redirect" replace />;

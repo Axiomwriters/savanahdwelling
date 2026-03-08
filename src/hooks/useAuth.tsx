@@ -6,15 +6,16 @@ import {
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { AppRole, isProfessionalTier } from "@/utils/AuthRedirectHandler";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type RoleType = 'buyer' | 'agent' | 'host' | 'professional' | 'admin' | null;
-
 interface AuthContextType {
   user: ReturnType<typeof useUser>['user'];
   isAuthenticated: boolean;
-  userRole: RoleType;
+  userRole: AppRole;
   isAgent: boolean;
+  isHost: boolean;
+  isProfessional: boolean;
   isAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
@@ -54,9 +55,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   // Derive role from Clerk unsafeMetadata
-  const userRole = (user?.unsafeMetadata?.role as RoleType) ?? null;
+  const userRole = (user?.unsafeMetadata?.role as AppRole) ?? null;
   const isAuthenticated = !!isSignedIn;
   const isAgent = userRole === 'agent' || userRole === 'admin';
+  const isHost = userRole === 'host' || userRole === 'admin';
+  const isProfessional = isProfessionalTier(userRole);
   const isAdmin = userRole === 'admin';
   const loading = !isLoaded;
 
@@ -67,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         userRole,
         isAgent,
+        isHost,
+        isProfessional,
         isAdmin,
         loading,
         signOut,
