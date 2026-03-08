@@ -1,8 +1,8 @@
 
 // src/pages/SignUp.tsx — Headless Clerk with custom UI
 import { useSignUp } from '@clerk/clerk-react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,9 +23,15 @@ const ROLES = [
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [step, setStep] = useState<Step>('role');
-  const [selectedRole, setRole] = useState('tenant');
+
+
+  const roleFromQuery = searchParams.get('role');
+  const isPresetRole = roleFromQuery === 'agent' || roleFromQuery === 'host';
+
+  const [step, setStep] = useState<Step>(isPresetRole ? 'credentials' : 'role');
+  const [selectedRole, setRole] = useState(isPresetRole ? roleFromQuery : 'tenant');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,6 +39,12 @@ export default function SignUpPage() {
   const [code, setCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+    if (isPresetRole) {
+      setSelectedRole(selectedRole);
+    }
+  }, [isPresetRole, selectedRole]);
 
   /* ── STEP 1: Role selection ─────────────────────────── */
   const handleRoleContinue = () => {
