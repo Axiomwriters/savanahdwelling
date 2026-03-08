@@ -18,7 +18,11 @@ const ProfessionalLanding = () => {
 
   const handleSignup = (role: 'agent' | 'host') => {
     if (isAuthenticated) {
-      navigate('/onboarding/sync', { replace: true });
+      if (role === 'agent') {
+        navigate('/agent/dashboard', { replace: true });
+      } else {
+        navigate('/onboarding/sync', { replace: true });
+      }
       return;
     }
 
