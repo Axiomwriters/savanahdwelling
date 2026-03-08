@@ -4,8 +4,8 @@ import { useUser } from '@clerk/clerk-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppRole, resolveRedirect } from '@/utils/AuthRedirectHandler';
 
-type AppRole = 'agent' | 'host' | 'tenant' | 'admin' | 'professional' | 'buyer' | undefined;
 type SyncStatus = 'checking' | 'timeout';
 
 const MAX_RETRIES = 7;
@@ -14,21 +14,6 @@ const MAX_BACKOFF_MS = 4000;
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const getRoleRedirectPath = (role: AppRole) => {
-  switch (role) {
-    case 'agent':
-      return '/dashboard/agent';
-    case 'host':
-      return '/dashboard/short-stay';
-    case 'tenant':
-      return '/dashboard/tenant';
-    case 'admin':
-      return '/dashboard/admin';
-    default:
-      return '/';
-  }
-};
-
 const SyncPage = () => {
   const { user, isLoaded } = useUser();
   const navigate = useNavigate();
@@ -36,21 +21,22 @@ const SyncPage = () => {
   const [isAssigningRole, setIsAssigningRole] = useState(false);
 
   const role = user?.unsafeMetadata?.role as AppRole;
-  const roleRedirectPath = useMemo(() => getRoleRedirectPath(role), [role]);
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const roleRedirectPath = useMemo(() => resolveRedirect(role), [role]);
 
   const checkSupabaseRecord = useCallback(async (): Promise<void> => {
-    if (!user) return;
+    if (!user || !email) return;
 
     setStatus('checking');
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt += 1) {
       const { data, error } = await supabase
         .from('profiles')
-        .select('clerk_user_id')
-        .eq('clerk_user_id', user.id)
+        .select('email')
+        .eq('email', email)
         .maybeSingle();
 
-      if (data?.clerk_user_id) {
+      if (data?.email) {
         navigate(roleRedirectPath, { replace: true });
         return;
       }
@@ -64,10 +50,10 @@ const SyncPage = () => {
     }
 
     setStatus('timeout');
-  }, [navigate, roleRedirectPath, user]);
+  }, [email, navigate, roleRedirectPath, user]);
 
-  const handleRoleSelection = useCallback(async (nextRole: 'agent' | 'host'): Promise<void> => {
-    if (!user) return;
+  const handleRoleSelection = useCallback(async (nextRole: 'agent' | 'host' | 'professional' | 'tenant'): Promise<void> => {
+    if (!user || !email) return;
 
     setIsAssigningRole(true);
 
@@ -84,10 +70,11 @@ const SyncPage = () => {
       .upsert(
         {
           clerk_user_id: user.id,
+          email,
           role: nextRole,
           onboarding_complete: false,
         },
-        { onConflict: 'clerk_user_id' }
+        { onConflict: 'email' }
       );
 
     if (error) {
@@ -95,8 +82,8 @@ const SyncPage = () => {
     }
 
     setIsAssigningRole(false);
-    navigate(getRoleRedirectPath(nextRole), { replace: true });
-  }, [navigate, user]);
+    navigate(resolveRedirect(nextRole), { replace: true });
+  }, [email, navigate, user]);
 
   useEffect(() => {
     if (!isLoaded || !user || !role) return;
@@ -107,7 +94,7 @@ const SyncPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <div className="max-w-xl w-full border rounded-xl p-6 bg-card text-center space-y-4">
-          <p className="text-xl font-semibold">Choose Your Professional Role</p>
+          <p className="text-xl font-semibold">Choose Your Role</p>
           <p className="text-sm text-muted-foreground">
             Select how you want to use Savanah Dwelling so we can route you to the correct command center.
           </p>
@@ -117,6 +104,12 @@ const SyncPage = () => {
             </Button>
             <Button disabled={isAssigningRole} variant="outline" onClick={() => void handleRoleSelection('host')}>
               {isAssigningRole ? 'Assigning...' : 'I am a Host'}
+            </Button>
+            <Button disabled={isAssigningRole} variant="secondary" onClick={() => void handleRoleSelection('professional')}>
+              {isAssigningRole ? 'Assigning...' : 'I am a Professional'}
+            </Button>
+            <Button disabled={isAssigningRole} variant="ghost" onClick={() => void handleRoleSelection('tenant')}>
+              {isAssigningRole ? 'Assigning...' : 'I am a Tenant / Buyer'}
             </Button>
           </div>
         </div>
@@ -154,4 +147,3 @@ const SyncPage = () => {
 };
 
 export default SyncPage;
-
