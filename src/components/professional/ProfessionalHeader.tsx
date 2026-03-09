@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import '@/styles/professional.css';
 import {
@@ -15,25 +15,25 @@ import { ChevronDown } from 'lucide-react';
 
 const ProfessionalHeader = () => {
   const { isAuthenticated } = useAuth();
+  const { user } = useUser();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignIn = (role: 'agent' | 'host') => {
-    if (isAuthenticated) {
-      if (role === 'agent') {
-        navigate('/agent/dashboard');
-      } else {
-        navigate('/dashboard/short-stay');
-      }
-    } else {
-      navigate(`/sign-in?role=${role}`);
-    }
+    navigate(`/sign-in?role=${role}`);
   };
 
   const handleDashboard = () => {
-    // This assumes a default or primary dashboard for the authenticated user
-    // You might want to refine this based on the user's actual role
-    navigate('/agent/dashboard');
+    const role = user?.publicMetadata.role as string;
+
+    if (role === 'host') {
+      navigate('/dashboard/short-stay');
+    } else if (role === 'agent') {
+      navigate('/agent/dashboard');
+    } else {
+      // Fallback for other roles or if role is not defined
+      navigate('/');
+    }
   };
 
   return (
