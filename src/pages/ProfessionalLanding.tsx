@@ -21,7 +21,7 @@ const ProfessionalLanding = () => {
       if (role === 'agent') {
         navigate('/agent/dashboard', { replace: true });
       } else {
-        navigate('/onboarding/sync', { replace: true });
+        navigate('/dashboard/short-stay', { replace: true });
       }
       return;
     }
