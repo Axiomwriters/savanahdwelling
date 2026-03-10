@@ -43,7 +43,7 @@ export default function MyListings() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full">
         <Loader2 className="w-12 h-12 animate-spin text-primary" />
       </div>
     );
@@ -118,7 +118,7 @@ export default function MyListings() {
   const filteredListings = displayListings?.filter(_ => true); // Replace with actual filter logic
 
   return (
-    <div className="flex-1 space-y-8">
+    <div className="space-y-8">
       <AddListingModal open={isAddListingOpen} onOpenChange={setIsAddListingOpen} />
 
       {/* Header Section */}
