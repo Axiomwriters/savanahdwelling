@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "tanstack/react-query";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/hooks/useAuth";
@@ -13,17 +13,18 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { TripProvider } from "@/contexts/TripContext";
 import { LocationAgentProvider } from "@/contexts/LocationAgentContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { agentRoutes } from "@/routes/agentRoutes"; // Corrected import path
+import { agentRoutes } from "@/routes/agentRoutes";
 
 // Layouts
 import MainLayout from "@/components/MainLayout";
 import ShortStayLayout from "@/components/layouts/ShortStayLayout";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { AgentSidebar } from "@/components/AgentSidebar";
 
-// Page Components (sorted alphabetically)
+// Page Components
 const AccountSettings = lazy(() => import("./pages/AccountSettings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AffordabilityPage = lazy(() => import("./pages/AffordabilityPage"));
-const AgentDashboard = lazy(() => import("./pages/AgentDashboard"));
 const AgentProfile = lazy(() => import("./pages/AgentProfile"));
 const Auth = lazy(() => import("./pages/Auth"));
 const BecomeAgent = lazy(() => import("./pages/BecomeAgent"));
@@ -115,7 +116,7 @@ const App = () => {
                         <Route path="/dashboard/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
 
                         {/* --- Scalable Agent Dashboard --- */}
-                        <Route path="/agent" element={<ProtectedRoute><AgentDashboard /></ProtectedRoute>}>
+                        <Route path="/agent" element={<ProtectedRoute><DashboardLayout sidebar={<AgentSidebar />} /></ProtectedRoute>}>
                           {agentRoutes.map((route, index) => (
                             <Route key={index} index={route.index} path={route.path} element={route.element} />
                           ))}
