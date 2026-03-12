@@ -1,9 +1,10 @@
-
 import React from 'react';
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Searchbar from './Searchbar';
+import AgencyModeToggle from '@/pages/AgentDashboard/components/AgencyModeToggle';
+import { ModeToggle } from '@/components/mode-toggle';
 
 interface DashboardHeaderProps {
   searchTerm: string;
@@ -11,9 +12,17 @@ interface DashboardHeaderProps {
   hideSearchBar?: boolean;
   hideLogo?: boolean;
   hideThemeSwitcher?: boolean;
+  isAgentDashboard?: boolean;
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ searchTerm, onSearchChange, hideSearchBar, hideLogo, hideThemeSwitcher }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ 
+  searchTerm, 
+  onSearchChange, 
+  hideSearchBar, 
+  hideLogo, 
+  hideThemeSwitcher, 
+  isAgentDashboard 
+}) => {
   const { setTheme, theme } = useTheme();
 
   return (
@@ -21,6 +30,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ searchTerm, onSearchC
       <div className="flex items-center gap-2 justify-start">
         {!hideLogo && (
           <img src="/Savanahdwell.png" alt="Savanah Dwelling" className="h-8" />
+        )}
+        {isAgentDashboard && (
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl md:text-3xl font-bold leading-tight truncate">
+              Command Center
+            </h1>
+            <p className="hidden sm:block text-sm text-muted-foreground">
+              Track your performance and manage your deals.
+            </p>
+          </div>
         )}
       </div>
 
@@ -33,7 +52,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ searchTerm, onSearchC
       </div>
 
       <div className="flex items-center gap-2 justify-end col-start-3">
-        {!hideThemeSwitcher && (
+        {isAgentDashboard && (
+          <>
+            <AgencyModeToggle />
+            <ModeToggle />
+          </>
+        )}
+        {!hideThemeSwitcher && !isAgentDashboard && (
           <Button
               variant="ghost"
               size="icon"

@@ -9,6 +9,7 @@ interface HeaderWrapperProps {
   hideLogo?: boolean;
   hideSearchBar?: boolean;
   hideThemeSwitcher?: boolean;
+  isAgentDashboard?: boolean;
 }
 
 export function HeaderWrapper({
@@ -17,6 +18,7 @@ export function HeaderWrapper({
   hideLogo = false,
   hideSearchBar = false,
   hideThemeSwitcher = false,
+  isAgentDashboard = false,
 }: HeaderWrapperProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(
@@ -55,6 +57,7 @@ export function HeaderWrapper({
         hideLogo={hideLogo}
         hideSearchBar={hideSearchBar}
         hideThemeSwitcher={hideThemeSwitcher}
+        isAgentDashboard={isAgentDashboard}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { HeaderWrapper } from "@/components/HeaderWrapper";
@@ -21,7 +21,7 @@ export function DashboardLayout({ sidebar }: DashboardLayoutProps) {
 
         <SidebarInset className="flex-1 w-full flex flex-col">
           <div className="shrink-0 z-40 w-full bg-background/95 backdrop-blur-sm border-b">
-            <HeaderWrapper isScrolled={isScrolled} hideLogo={true} hideSearchBar={true} hideThemeSwitcher={false} />
+            <HeaderWrapper isScrolled={isScrolled} hideLogo={true} hideSearchBar={true} hideThemeSwitcher={true} isAgentDashboard={true} />
           </div>
 
           <main 
