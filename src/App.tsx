@@ -53,6 +53,7 @@ const SyncPage = lazy(() => import('./pages/onboarding/sync'));
 const TripDetails = lazy(() => import("./pages/ShortStay/TripDetails"));
 const Unauthorized = lazy(() => import("./pages/Unauthorized"));
 const UserProfileSettings = lazy(() => import("./pages/UserProfileSettings"));
+const VerificationPage = lazy(() => import("./pages/Verification/VerificationPage"));
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => {
                         <Route path="/sso-callback" element={<SSOCallback />} />
                         <Route path="/redirect" element={<RedirectPage />} />
                         <Route path="/onboarding/sync" element={<SyncPage />} />
+                        <Route path="/verification" element={<VerificationPage />} />
 
                         {/* --- Account Routes --- */}
                         <Route path="/profile/settings" element={<UserProfileSettings />} />

@@ -221,6 +221,66 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          role: "agent" | "host"
+          token: string
+          status: "pending" | "completed" | "expired" | "cancelled"
+          id_front_url: string | null
+          id_back_url: string | null
+          selfie_url: string | null
+          phone_number: string | null
+          phone_verified: boolean | null
+          otp_code: string | null
+          otp_expires_at: string | null
+          otp_attempts: number | null
+          expires_at: string
+          created_at: string | null
+          updated_at: string | null
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          role: "agent" | "host"
+          token: string
+          status?: "pending" | "completed" | "expired" | "cancelled"
+          id_front_url?: string | null
+          id_back_url?: string | null
+          selfie_url?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean | null
+          otp_code?: string | null
+          otp_expires_at?: string | null
+          otp_attempts?: number | null
+          expires_at: string
+          created_at?: string | null
+          updated_at?: string | null
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          role?: "agent" | "host"
+          token?: string
+          status?: "pending" | "completed" | "expired" | "cancelled"
+          id_front_url?: string | null
+          id_back_url?: string | null
+          selfie_url?: string | null
+          phone_number?: string | null
+          phone_verified?: boolean | null
+          otp_code?: string | null
+          otp_expires_at?: string | null
+          otp_attempts?: number | null
+          expires_at?: string
+          created_at?: string | null
+          updated_at?: string | null
+          completed_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -100,14 +100,16 @@ export default function SignUpPage() {
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
 
-        // Use the unsafeMetadata from the verification result
         const role = result.unsafeMetadata?.role as string;
         console.log(`Detected role: ${role}`);
 
-        const destination = resolveDashboard(role);
-        console.log(`Redirecting → ${destination}`);
-
-        navigate(destination, { replace: true });
+        if (role === 'agent' || role === 'host') {
+          navigate(`/verification?role=${role}`, { replace: true });
+        } else {
+          const destination = resolveDashboard(role);
+          console.log(`Redirecting → ${destination}`);
+          navigate(destination, { replace: true });
+        }
 
       } else {
         toast.error('Verification incomplete. Check your code and try again.');
