@@ -38,7 +38,7 @@ const locationData = {
       growth: "+10%",
       properties: 156,
       description: "Major mid-income neighborhood near town",
-      image: apartmentKilimani // Reusing suitable image
+      image: apartmentKilimani
     },
     {
       id: "2",
@@ -47,7 +47,7 @@ const locationData = {
       growth: "+15%",
       properties: 89,
       description: "Central and well-known residential hood",
-      image: apartmentWestlands // Reusing suitable image
+      image: apartmentWestlands
     },
     {
       id: "3",
@@ -56,7 +56,25 @@ const locationData = {
       growth: "+8%",
       properties: 134,
       description: "Popular rental zone along the highway",
-      image: apartmentParklands // Reusing suitable image
+      image: apartmentParklands
+    },
+    {
+      id: "13",
+      name: "Githima",
+      averagePrice: "KSh 20,000/month",
+      growth: "+12%",
+      properties: 78,
+      description: "Quiet residential area with good connectivity",
+      image: apartmentKilimani
+    },
+    {
+      id: "14",
+      name: "Kenyatta Ave",
+      averagePrice: "KSh 40,000/month",
+      growth: "+9%",
+      properties: 45,
+      description: "Premium location along the main avenue",
+      image: apartmentWestlands
     }
   ],
   sell: [
@@ -67,7 +85,7 @@ const locationData = {
       growth: "+18%",
       properties: 67,
       description: "Large, growing residential area",
-      image: bungalowKaren // Reusing suitable image
+      image: bungalowKaren
     },
     {
       id: "5",
@@ -76,7 +94,7 @@ const locationData = {
       growth: "+12%",
       properties: 43,
       description: "Established upscale estate",
-      image: villaLavington // Reusing suitable image
+      image: villaLavington
     },
     {
       id: "6",
@@ -85,7 +103,25 @@ const locationData = {
       growth: "+20%",
       properties: 78,
       description: "Big residential and development zone",
-      image: houseRunda // Reusing suitable image
+      image: houseRunda
+    },
+    {
+      id: "15",
+      name: "Ngata",
+      averagePrice: "KSh 6.5M",
+      growth: "+16%",
+      properties: 52,
+      description: "Emerging suburb with modern developments",
+      image: villaLavington
+    },
+    {
+      id: "16",
+      name: "Kiburegon",
+      averagePrice: "KSh 4.2M",
+      growth: "+14%",
+      properties: 91,
+      description: "Affordable area close to town center",
+      image: bungalowKaren
     }
   ],
   shortStay: [
@@ -115,6 +151,24 @@ const locationData = {
       properties: 56,
       description: "Cozy homes near recreational spots",
       image: apartmentRiverside
+    },
+    {
+      id: "17",
+      name: "Lake View Area",
+      averagePrice: "KSh 6,500/night",
+      growth: "+22%",
+      properties: 28,
+      description: "Scenic views near Lake Nakuru",
+      image: hotelGigiri
+    },
+    {
+      id: "18",
+      name: "Westside Retreat",
+      averagePrice: "KSh 3,500/night",
+      growth: "+18%",
+      properties: 67,
+      description: "Budget-friendly stays for tourists",
+      image: hotelCBD
     }
   ],
   buy: [
@@ -143,6 +197,24 @@ const locationData = {
       growth: "+32%",
       properties: 145,
       description: "Suburban transition area with great plots",
+      image: houseKiambu
+    },
+    {
+      id: "19",
+      name: "Mwichuti",
+      averagePrice: "KSh 800k/plot",
+      growth: "+19%",
+      properties: 112,
+      description: "Developing area with great potential",
+      image: houseThikaRoad
+    },
+    {
+      id: "20",
+      name: "Kasarani",
+      averagePrice: "KSh 2.1M/plot",
+      growth: "+26%",
+      properties: 89,
+      description: "Sports and recreation hub area",
       image: houseKiambu
     }
   ]

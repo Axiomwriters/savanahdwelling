@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 
 const ProfessionalHeader = () => {
   const { isAuthenticated, userRole } = useAuth();
@@ -30,13 +30,24 @@ const ProfessionalHeader = () => {
     }
   };
 
+  const navLinks = [
+    { label: 'About Us', href: '/about' },
+    { label: 'Demo', href: '/demo' },
+  ];
+
   return (
     <header className="professional-header">
       <div className="professional-header-container">
         <img src="/Savanahdwell.png" alt="Savanah" style={{ height: '60px' }} />
         <nav className="professional-nav">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <ModeToggle />
+            <div className="professional-nav-links desktop-nav">
+              {navLinks.map((link) => (
+                <a key={link.href} href={link.href} className="nav-link">
+                  {link.label}
+                </a>
+              ))}
+            </div>
             {isAuthenticated ? (
               <Button variant="outline" size="sm" onClick={handleDashboard}>Dashboard</Button>
             ) : (
@@ -57,8 +68,29 @@ const ProfessionalHeader = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <ModeToggle />
+            <button 
+              className="mobile-menu-toggle"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </nav>
+        <div className={`mobile-nav-overlay ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(false)} />
+        <div className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+          <div className="mobile-nav-header">
+            <button onClick={() => setIsMenuOpen(false)} aria-label="Close menu">
+              <X size={24} />
+            </button>
+          </div>
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
+              {link.label}
+            </a>
+          ))}
+        </div>
       </div>
     </header>
   );

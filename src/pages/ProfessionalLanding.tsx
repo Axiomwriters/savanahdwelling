@@ -1,10 +1,11 @@
 
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building2, Briefcase, TrendingUp, Users } from 'lucide-react';
+import { Building2, Briefcase, TrendingUp, Users, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import ProfessionalHeader from '@/components/professional/ProfessionalHeader';
+import { BestLocationsSection } from '@/components/BestLocationsSection';
 import '@/styles/professional.css';
 
 const ProfessionalLanding = () => {
@@ -90,7 +91,23 @@ const ProfessionalLanding = () => {
             </p>
           </div>
         </section>
+        <section className="professional-locations-section">
+          <BestLocationsSection />
+        </section>
       </main>
+      <footer className="professional-footer">
+        <div className="professional-footer-container">
+          <p className="professional-footer-copyright">
+            © 2026 Savanah Dwelling. All rights reserved.
+          </p>
+          <div className="professional-footer-social">
+            <a href="#" aria-label="Facebook" className="social-icon"><Facebook size={18} /></a>
+            <a href="#" aria-label="Twitter" className="social-icon"><Twitter size={18} /></a>
+            <a href="#" aria-label="Instagram" className="social-icon"><Instagram size={18} /></a>
+            <a href="#" aria-label="LinkedIn" className="social-icon"><Linkedin size={18} /></a>
+          </div>
+        </div>
+      </footer>
     </>
   );
 };
