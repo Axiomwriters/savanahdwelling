@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Calendar, User, Home, Eye, Check, X, Phone, Mail } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 import { toast } from "sonner";
 
 type ViewingStatus = "all" | "scheduled" | "completed" | "cancelled" | "no_show";
@@ -40,7 +40,7 @@ export default function AdminViewings() {
   const fetchViewings = async () => {
     setLoading(true);
     try {
-      let query = supabase
+      let query = supabaseAdmin
         .from("viewings")
         .select("*")
         .order("viewing_date", { ascending: true });
@@ -62,7 +62,7 @@ export default function AdminViewings() {
 
   const handleUpdateStatus = async (id: string, status: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from("viewings")
         .update({ status })
         .eq("id", id);

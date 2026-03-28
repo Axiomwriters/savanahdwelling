@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Eye, Shield, ShieldCheck, UserCog, Building2, Crown, RefreshCw, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 import { toast } from "sonner";
 
 type Role = "all" | "agent" | "landlord" | "agency" | "host";
@@ -45,8 +45,16 @@ export default function AdminAccounts() {
       setLoading(true);
     }
     
+    if (!supabaseAdmin) {
+      toast.error("Admin client not initialized. Check environment variables.");
+      setProfiles([]);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+    
     try {
-      const { data: profiles, error } = await supabase
+      const { data: profiles, error } = await supabaseAdmin
         .from('profiles')
         .select(`
           id,

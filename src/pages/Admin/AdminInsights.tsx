@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Users, Home, Eye, Calendar, DollarSign, BarChart3 } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar } from "recharts";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 
 const monthlyData = [
   { name: "Jan", listings: 45, users: 120, revenue: 2500000 },
@@ -39,11 +39,11 @@ export default function AdminInsights() {
     try {
       setLoading(true);
       
-      const { count: listingsCount } = await supabase
+      const { count: listingsCount } = await supabaseAdmin
         .from("agent_listings")
         .select("*", { count: "exact", head: true });
 
-      const { count: usersCount } = await supabase
+      const { count: usersCount } = await supabaseAdmin
         .from("profiles")
         .select("*", { count: "exact", head: true });
 

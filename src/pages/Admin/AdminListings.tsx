@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Home, MoreHorizontal, Eye, Edit, Trash2, DollarSign, MapPin, Bed, Bath } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 import { toast } from "sonner";
 
 type ListingStatus = "all" | "active" | "pending" | "sold" | "rented";
@@ -44,7 +44,7 @@ export default function AdminListings() {
   const fetchListings = async () => {
     setLoading(true);
     try {
-      let query = supabase
+      let query = supabaseAdmin
         .from("listings")
         .select("*")
         .order("created_at", { ascending: false });
@@ -71,7 +71,7 @@ export default function AdminListings() {
     if (!confirm("Are you sure you want to delete this listing?")) return;
 
     try {
-      const { error } = await supabase.from("listings").delete().eq("id", id);
+      const { error } = await supabaseAdmin.from("listings").delete().eq("id", id);
       if (error) throw error;
       toast.success("Listing deleted successfully");
       fetchListings();

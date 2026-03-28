@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Users, Home, Calendar, Shield, ArrowRight, Eye, Map, Clock } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 
 const weeklyData = [
   { name: "Mon", views: 240, verifications: 12, listings: 8 },
@@ -77,7 +77,7 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     try {
       const [accountsRes] = await Promise.all([
-        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
       ]);
 
       setStats({

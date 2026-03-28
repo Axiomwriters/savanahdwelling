@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, FileText, Check, X, Eye, Shield, Clock, User } from "lucide-react";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 

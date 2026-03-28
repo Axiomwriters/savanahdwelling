@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/adminClient";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -57,7 +57,7 @@ export function AdminSidebarContent({ onNavigate }: AdminSidebarContentProps = {
 
   const fetchCounts = async () => {
     try {
-      const { count } = await supabase
+      const { count } = await supabaseAdmin
         .from("profiles")
         .select("*", { count: "exact", head: true })
         .eq("verification_status", "pending");
@@ -164,7 +164,7 @@ export function AdminSidebar({ onNavigate, isMobileOpen = false, onMobileToggle 
 
   const fetchCounts = async () => {
     try {
-      const { count } = await supabase
+      const { count } = await supabaseAdmin
         .from("profiles")
         .select("*", { count: "exact", head: true })
         .eq("verification_status", "pending");
