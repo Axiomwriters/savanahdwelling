@@ -23,7 +23,7 @@ const faqData: FAQCategory[] = [
       },
       {
         question: "What are the benefits of using the Savanah Intelligence Engine?",
-        answer: "Our AI-powered engine provides accurate property valuations with 95% accuracy, tracks demand signals in real-time, and helps you prioritize serious buyers using intent scoring."
+        answer: "Our intelligence engine provides property valuations, tracks demand signals in real-time, and helps you prioritize serious buyers using intent scoring."
       },
       {
         question: "How do I track my performance and leads?",

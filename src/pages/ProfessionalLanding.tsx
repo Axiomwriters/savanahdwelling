@@ -50,7 +50,7 @@ const ProfessionalLanding = () => {
             <p 
               className="mt-4 text-muted-foreground max-w-3xl professional-hero-description"
             >
-              Use the Savanah Intelligence Engine to value your listings with 95% accuracy,
+              Use the Savanah Intelligence Engine to value your listings,
               track demand signals, and convert more qualified buyers across Nakuru.
             </p>
 
