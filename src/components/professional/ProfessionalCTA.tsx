@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, CheckCircle2, Home, Calendar, Users, CreditCard, Building2, HardHat, PenTool, Calculator, TrendingUp, Shield, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Home, Calendar, Users, CreditCard, Building2, HardHat, PenTool, Calculator, TrendingUp, Shield, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import { useNavigate } from 'react-router-dom';
 
 interface CTASlide {
@@ -16,7 +17,17 @@ interface CTASlide {
 
 export function ProfessionalCTA() {
   const navigate = useNavigate();
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const interval = setInterval(() => {
+      carouselApi.scrollNext();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [carouselApi]);
 
   const handleSignup = (role: 'agent' | 'host') => {
     navigate(`/sign-up?role=${role}`, { replace: false });
@@ -120,119 +131,77 @@ export function ProfessionalCTA() {
     },
   ];
 
-  const goToPrevSlide = () => {
-    setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  const goToNextSlide = () => {
-    setActiveSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
   return (
     <section className="professional-cta-section">
-      <div className="professional-cta-carousel">
-        <button 
-          className="professional-cta-nav professional-cta-nav-prev" 
-          onClick={goToPrevSlide}
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        
-        <button 
-          className="professional-cta-nav professional-cta-nav-next" 
-          onClick={goToNextSlide}
-          aria-label="Next slide"
-        >
-          <ChevronRight size={24} />
-        </button>
-        
-        <div className="professional-cta-indicators">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              className={`professional-cta-indicator ${index === activeSlide ? 'active' : ''}`}
-              onClick={() => setActiveSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
+      <Carousel className="w-full" opts={{ loop: true }} setApi={setCarouselApi}>
+        <CarouselContent>
+          {slides.map((slide) => (
+            <CarouselItem key={slide.id}>
+              <div className="professional-cta-container">
+                <div className="professional-cta-content">
+                  <span className="professional-cta-badge">{slide.badge}</span>
+                  <h2 className="professional-cta-title">{slide.title}</h2>
+                  <p className="professional-cta-description">{slide.description}</p>
+                  
+                  <div className="professional-cta-features">
+                    {slide.features.map((feature, index) => (
+                      <div key={index} className="professional-cta-feature">
+                        {feature.icon}
+                        <span>{feature.text}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="professional-cta-buttons">
+                    {slide.buttons.map((button, index) => (
+                      <Button
+                        key={index}
+                        size="lg"
+                        onClick={button.action}
+                        className={button.primary ? 'professional-cta-btn-primary' : 'professional-cta-btn-secondary'}
+                      >
+                        {button.label}
+                        {button.primary && <ArrowRight className="ml-2 w-4 h-4" />}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="professional-cta-visual">
+                  <div className="professional-cta-card">
+                    <div className="professional-cta-card-header">
+                      <div className="professional-cta-card-icon">{slide.visual.icon}</div>
+                      <div>
+                        <h4>{slide.visual.title}</h4>
+                        <p>{slide.visual.subtitle}</p>
+                      </div>
+                    </div>
+                    {slide.visual.stats && (
+                      <div className="professional-cta-stats">
+                        {slide.visual.stats.map((stat, index) => (
+                          <div key={index} className="professional-cta-stat">
+                            <span className="stat-value">{stat.value}</span>
+                            <span className="stat-label">{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {slide.floats && slide.floats.map((float, index) => (
+                    <div key={index} className={`professional-cta-float-card cta-float-${index + 1}`}>
+                      <span>{float.icon}</span>
+                      <span>{float.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CarouselItem>
           ))}
-        </div>
-        
-        {slides.map((slide, slideIndex) => (
-          <div 
-            key={slide.id} 
-            className="professional-cta-slide" 
-            style={{ display: activeSlide === slideIndex ? 'block' : 'none' }}
-          >
-            <div className="professional-cta-container">
-              <div className="professional-cta-content">
-                <span className="professional-cta-badge">{slide.badge}</span>
-                <h2 className="professional-cta-title">{slide.title}</h2>
-                <p className="professional-cta-description">{slide.description}</p>
-                
-                <div className="professional-cta-features">
-                  {slide.features.map((feature, index) => (
-                    <div key={index} className="professional-cta-feature">
-                      {feature.icon}
-                      <span>{feature.text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="professional-cta-buttons">
-                  {slide.buttons.map((button, index) => (
-                    <Button
-                      key={index}
-                      size="lg"
-                      onClick={button.action}
-                      className={button.primary ? 'professional-cta-btn-primary' : 'professional-cta-btn-secondary'}
-                    >
-                      {button.label}
-                      {button.primary && <ArrowRight className="ml-2 w-4 h-4" />}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="professional-cta-visual">
-                <div className="professional-cta-card">
-                  <div className="professional-cta-card-header">
-                    <div className="professional-cta-card-icon">{slide.visual.icon}</div>
-                    <div>
-                      <h4>{slide.visual.title}</h4>
-                      <p>{slide.visual.subtitle}</p>
-                    </div>
-                  </div>
-                  {slide.visual.stats && (
-                    <div className="professional-cta-stats">
-                      {slide.visual.stats.map((stat, index) => (
-                        <div key={index} className="professional-cta-stat">
-                          <span className="stat-value">{stat.value}</span>
-                          <span className="stat-label">{stat.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                
-                {slide.floats && slide.floats.map((float, index) => (
-                  <div key={index} className={`professional-cta-float-card cta-float-${index + 1}`}>
-                    <span>{float.icon}</span>
-                    <span>{float.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+        </CarouselContent>
+        <CarouselPrevious className="left-2 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background" />
+        <CarouselNext className="right-2 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background" />
+      </Carousel>
     </section>
   );
 }
