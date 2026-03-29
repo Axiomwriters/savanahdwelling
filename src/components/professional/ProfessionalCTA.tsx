@@ -55,7 +55,6 @@ export function ProfessionalCTA() {
       ],
       buttons: [
         { label: 'Sign Up as Agent', action: () => handleSignup('agent'), primary: true },
-        { label: 'Sign Up as Host', action: () => handleSignup('host') },
       ],
       visual: {
         icon: '🏠',
@@ -84,7 +83,6 @@ export function ProfessionalCTA() {
       ],
       buttons: [
         { label: 'Join as Professional', action: handleProfessionalSignup, primary: true },
-        { label: 'Go to Dashboard', action: handleProfessionalDashboard },
       ],
       visual: {
         icon: '🏗️',
@@ -113,7 +111,6 @@ export function ProfessionalCTA() {
       ],
       buttons: [
         { label: 'Become a Host', action: () => handleSignup('host'), primary: true },
-        { label: 'Host Dashboard', action: () => navigate('/dashboard/short-stay') },
       ],
       visual: {
         icon: '🏡',

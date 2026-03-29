@@ -15,6 +15,7 @@ const Analytics = lazy(() => import("./ProfessionalDashboard/Analytics"));
 
 export default function ProfessionalDashboard() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,14 +26,18 @@ export default function ProfessionalDashboard() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleMobileToggle = () => {
+    setIsMobileOpen(!isMobileOpen);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <ProfessionalSidebar />
+        <ProfessionalSidebar isMobileOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
 
         <SidebarInset className="flex-1 w-full relative">
           <div className="sticky top-0 z-50 w-full transition-all duration-300">
-            <HeaderWrapper isScrolled={isScrolled} />
+            <HeaderWrapper isScrolled={isScrolled} isMobileSidebarOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
           </div>
 
           <main className={cn("p-6 transition-all duration-300")}>
